@@ -1,17 +1,19 @@
+use anyhow::{Context, Result};
 use std::fmt;
 use std::fs::File;
 use std::io::Write;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-fn main() {
-    // TODO: If LICENSE file already exists, don't modify it
-    // unless given --force/-f flag.
-    let file = File::create("LICENSE").unwrap();
-    let year = 2026;
+fn main() -> Result<()> {
+    const PATH: &str = "LICENSE";
+    let file = File::create_new(PATH).with_context(|| format!("Failed to create {}", PATH))?;
+    let year = get_current_year().context("Fail to get current year")?;
     let license = MIT {
         holder: "Czcfsdx",
-        year: year,
+        year: year as usize,
     };
-    write!(&file, "{}", license).unwrap();
+    write!(&file, "{}", license).with_context(|| format!("Failed to write {}", PATH))?;
+    Ok(())
 }
 
 #[derive(Debug)]
@@ -72,14 +74,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 // check https://spdx.org/licenses/
 
 // Utils functions
-// use std::time::{SystemTime, UNIX_EPOCH};
-// TODO: Use local time instead UTC time.
-// fn get_current_year() -> u32 {
-//     match SystemTime::now().duration_since(UNIX_EPOCH) {
-//         Ok(duration) => {
-//             let timestamp = duration.as_secs();
 
-//         },
-//         Err(e) => { panic!("Fail to get SystemTime: {}", e) },
-//     }
-// }
+// TODO(20261012-100823): Use local time instead UTC time.
+// We assume that the current year cannot be 0 AD or BC.
+fn get_current_year() -> Result<u64> {
+    let duration = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .context("SystemTime before UNIX EPOCH")?;
+    let days = duration.as_secs() / 86400 + 719468;
+    let era = days / 146097;
+    let day_of_era = days - era * 146097;
+    let year_of_era =
+        (day_of_era - day_of_era / 1460 + day_of_era / 36524 - day_of_era / 146096) / 365;
+
+    // TODO(20261012-101205): Maybe we don't need to calculate month since we only need year.
+    let day_of_year = day_of_era - (year_of_era * 365 + year_of_era / 4 - year_of_era / 100);
+    let month = (5 * day_of_year + 2) / 153;
+
+    let year = year_of_era + era * 400;
+    return if month <= 2 { Ok(year + 1) } else { Ok(year) };
+}
