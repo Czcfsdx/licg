@@ -101,6 +101,7 @@ fn main() -> Result<()> {
 
 // Utils functions
 
+// Get the current year
 // TODO(20261012-100823): Use local time instead UTC time.
 // We assume that the current year cannot be 0 AD or BC.
 fn get_current_year() -> Result<u64> {
