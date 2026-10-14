@@ -79,9 +79,9 @@ fn main() -> Result<()> {
     let path = args.path;
     let mut binding = File::options();
     let options = if args.force {
-        binding.write(true).create(true)
+        binding.write(true).truncate(true).create(true)
     } else {
-        binding.write(true).create_new(true)
+        binding.write(true).truncate(true).create_new(true)
     };
     let file = options.open(&path).or_else(|e| {
         if e.kind() == std::io::ErrorKind::AlreadyExists {

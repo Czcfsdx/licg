@@ -49,8 +49,7 @@ impl fmt::Display for License<'_> {
             LicenseKind::MIT => {
                 write!(
                     f,
-                    r#"
-MIT License
+                    r#"MIT License
 
 Copyright (c) {year} {holder}
 
@@ -76,8 +75,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
             LicenseKind::BSD2 => {
                 write!(
                     f,
-                    r#"
-BSD 2-Clause License
+                    r#"BSD 2-Clause License
 
 Copyright (c) {year}, {holder}
 
@@ -107,8 +105,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             LicenseKind::BSD3 => {
                 write!(
                     f,
-                    r#"
-BSD 3-Clause License
+                    r#"BSD 3-Clause License
 
 Copyright (c) {year}, {holder}
 
@@ -142,8 +139,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             LicenseKind::Apache2 => {
                 write!(
                     f,
-                    r#"
-                                 Apache License
+                    r#"                                 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -350,8 +346,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             LicenseKind::GPL2 => {
                 write!(
                     f,
-                    r#"
-                    GNU GENERAL PUBLIC LICENSE
+                    r#"                    GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
  Copyright (C) 1989, 1991 Free Software Foundation, Inc.,
@@ -696,8 +691,7 @@ Public License instead of this License.
             LicenseKind::GPL3 => {
                 write!(
                     f,
-                    r#"
-                    GNU GENERAL PUBLIC LICENSE
+                    r#"                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
