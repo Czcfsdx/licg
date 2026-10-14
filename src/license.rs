@@ -25,6 +25,13 @@ enum LicenseKind {
     BSD3, // BSD 3-Clause “New” or “Revised” License
 }
 
+pub fn list_license_kind() {
+    println!("Supported Licenses:");
+    println!(r#"    MIT:  MIT License"#);
+    println!(r#"    BSD2: BSD 2-Clause "Simplified" License"#);
+    println!(r#"    BSD3: BSD 3-Clause “New” or “Revised” License"#);
+}
+
 #[derive(Debug)]
 pub struct License<'a> {
     kind: LicenseKind,
@@ -34,7 +41,7 @@ pub struct License<'a> {
 
 impl<'a> License<'a> {
     pub fn from_input(input: &'a str, holder: &'a str, year: usize) -> Option<Self> {
-        match input {
+        match input.to_uppercase().as_str() {
             "MIT" => Some(License {
                 kind: LicenseKind::MIT,
                 holder,
@@ -84,7 +91,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."#
                 )
-            },
+            }
             LicenseKind::BSD2 => {
                 write!(
                     f,
@@ -114,7 +121,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 "#
                 )
-            },
+            }
             LicenseKind::BSD3 => {
                 write!(
                     f,
@@ -148,7 +155,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 "#
                 )
-            },
+            }
         }
     }
 }

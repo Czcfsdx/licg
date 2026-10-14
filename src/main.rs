@@ -12,7 +12,7 @@ mod license;
 /// A simple open source license generator
 struct Cli {
     /// License to generate
-    license: String,
+    license: Option<String>,
 
     /// Name of the copyright holder in license
     #[arg(short, long)]
@@ -22,6 +22,10 @@ struct Cli {
     #[arg(short, long, default_value = "./LICENSE")]
     path: String,
 
+    /// List the supported licenses and do not generate any file
+    #[arg(short, long)]
+    list: bool,
+
     /// Whether to overwrite the existing file
     #[arg(short, long)]
     force: bool,
@@ -29,23 +33,39 @@ struct Cli {
 
 fn main() -> Result<()> {
     let args = Cli::parse();
+
+    if args.list {
+        license::list_license_kind();
+        return Ok(());
+    }
+
     let path = args.path;
     let name = args.name.or(get_default_holder_name()).unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
             clap::error::ErrorKind::MissingRequiredArgument,
-            "--name is required since we fail to get a default holder name",
+            "--name <NAME> is required since we fail to get a default holder name, but not provided",
         )
         .exit()
     });
     let holder = name.trim();
-    let input = args.license.to_uppercase();
     let year = get_current_year().context("Fail to get current year")? as usize;
+    let input = args.license.unwrap_or_else(|| {
+        let mut cmd = Cli::command();
+        cmd.error(
+            clap::error::ErrorKind::MissingRequiredArgument,
+            "LICENSE is required without --list, but not provided",
+        )
+        .exit()
+    });
     let license = license::License::from_input(&input, holder, year).unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
             clap::error::ErrorKind::InvalidValue,
-            format!("Unknown license: {}", args.license),
+            format!(
+                "Unknown license: {}\n       Use -l/--list to see the supported licenses",
+                input
+            ),
         )
         .exit()
     });
