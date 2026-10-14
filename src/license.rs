@@ -19,10 +19,21 @@ use std::fmt;
 // Check https://spdx.org/licenses/ for more license
 
 #[derive(Debug)]
-enum LicenseKind {
+pub enum LicenseKind {
     MIT,  // MIT License
     BSD2, // BSD 2-Clause "Simplified" License
     BSD3, // BSD 3-Clause “New” or “Revised” License
+}
+
+impl LicenseKind {
+    pub fn from_input(input: &str) -> Option<Self> {
+        match input.to_uppercase().as_str() {
+            "MIT" => Some(LicenseKind::MIT),
+            "BSD2" => Some(LicenseKind::BSD2),
+            "BSD3" => Some(LicenseKind::BSD3),
+            _ => None,
+        }
+    }
 }
 
 pub fn list_license_kind() {
@@ -34,32 +45,9 @@ pub fn list_license_kind() {
 
 #[derive(Debug)]
 pub struct License<'a> {
-    kind: LicenseKind,
-    holder: &'a str,
-    year: usize,
-}
-
-impl<'a> License<'a> {
-    pub fn from_input(input: &'a str, holder: &'a str, year: usize) -> Option<Self> {
-        match input.to_uppercase().as_str() {
-            "MIT" => Some(License {
-                kind: LicenseKind::MIT,
-                holder,
-                year,
-            }),
-            "BSD2" => Some(License {
-                kind: LicenseKind::BSD2,
-                holder,
-                year,
-            }),
-            "BSD3" => Some(License {
-                kind: LicenseKind::BSD3,
-                holder,
-                year,
-            }),
-            _ => None,
-        }
-    }
+    pub kind: LicenseKind,
+    pub holder: &'a str,
+    pub year: usize,
 }
 
 impl fmt::Display for License<'_> {

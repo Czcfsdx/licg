@@ -34,22 +34,13 @@ struct Cli {
 fn main() -> Result<()> {
     let args = Cli::parse();
 
+    // if --list is provided, do not generate any license file
     if args.list {
         license::list_license_kind();
         return Ok(());
     }
 
-    let path = args.path;
-    let name = args.name.or(get_default_holder_name()).unwrap_or_else(|| {
-        let mut cmd = Cli::command();
-        cmd.error(
-            clap::error::ErrorKind::MissingRequiredArgument,
-            "--name <NAME> is required since we fail to get a default holder name, but not provided",
-        )
-        .exit()
-    });
-    let holder = name.trim();
-    let year = get_current_year().context("Fail to get current year")? as usize;
+    // parse the license kind
     let input = args.license.unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
@@ -58,7 +49,7 @@ fn main() -> Result<()> {
         )
         .exit()
     });
-    let license = license::License::from_input(&input, holder, year).unwrap_or_else(|| {
+    let kind = license::LicenseKind::from_input(&input).unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
             clap::error::ErrorKind::InvalidValue,
@@ -70,6 +61,22 @@ fn main() -> Result<()> {
         .exit()
     });
 
+    // parse holder_name
+    let name = args.name.or(get_default_holder_name()).unwrap_or_else(|| {
+        let mut cmd = Cli::command();
+        cmd.error(
+            clap::error::ErrorKind::MissingRequiredArgument,
+            "--name <NAME> is required since we fail to get a default holder name, but not provided",
+        )
+        .exit()
+    });
+    let holder = name.trim();
+
+    let year = get_current_year().context("Fail to get current year")? as usize;
+    let license = license::License { kind, holder, year };
+
+    // create license file
+    let path = args.path;
     let mut binding = File::options();
     let options = if args.force {
         binding.write(true).create(true)
