@@ -3,7 +3,7 @@ use clap::{CommandFactory, Parser};
 use std::fs::File;
 use std::io::Write;
 use std::process::Command;
-use std::time::{SystemTime, UNIX_EPOCH};
+use time::OffsetDateTime;
 
 mod license;
 
@@ -72,7 +72,7 @@ fn main() -> Result<()> {
     });
     let holder = name.trim();
 
-    let year = get_current_year().context("Fail to get current year")? as usize;
+    let year = OffsetDateTime::now_local().context("Fail to get current year")?.year();
     let license = license::License { kind, holder, year };
 
     // create license file
@@ -100,27 +100,6 @@ fn main() -> Result<()> {
 }
 
 // Utils functions
-
-// Get the current year
-// TODO(20261012-100823): Use local time instead UTC time.
-// We assume that the current year cannot be 0 AD or BC.
-fn get_current_year() -> Result<u64> {
-    let duration = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .context("SystemTime before UNIX EPOCH")?;
-    let days = duration.as_secs() / 86400 + 719468;
-    let era = days / 146097;
-    let day_of_era = days - era * 146097;
-    let year_of_era =
-        (day_of_era - day_of_era / 1460 + day_of_era / 36524 - day_of_era / 146096) / 365;
-
-    // TODO(20261012-101205): Maybe we don't need to calculate month since we only need year.
-    let day_of_year = day_of_era - (year_of_era * 365 + year_of_era / 4 - year_of_era / 100);
-    let month = (5 * day_of_year + 2) / 153;
-
-    let year = year_of_era + era * 400;
-    return if month <= 2 { Ok(year + 1) } else { Ok(year) };
-}
 
 // Get default holder name
 // Now this function just try to get the user name in git as the

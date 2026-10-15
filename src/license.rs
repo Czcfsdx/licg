@@ -38,7 +38,7 @@ pub fn list_license_kind() {
 pub struct License<'a> {
     pub kind: LicenseKind,
     pub holder: &'a str,
-    pub year: usize,
+    pub year: i32,
 }
 
 impl fmt::Display for License<'_> {
