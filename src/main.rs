@@ -29,6 +29,10 @@ struct Cli {
     /// Whether to overwrite the existing file
     #[arg(short, long)]
     force: bool,
+
+    /// Do not perform any operations that modify the filesystem and only show the debug output
+    #[arg(long)]
+    dry_run: bool
 }
 
 fn main() -> Result<()> {
@@ -75,8 +79,17 @@ fn main() -> Result<()> {
     let year = OffsetDateTime::now_local().context("Fail to get current year")?.year();
     let license = license::License { kind, holder, year };
 
-    // create license file
     let path = args.path;
+
+    if args.dry_run {
+        println!("Generate {:?}", license);
+        println!("Write following content into file {}:", path);
+        println!("==================================================");
+        print!("{}", license); // Do not need a new line
+        println!("==================================================");
+        return Ok(());
+    }
+
     let mut binding = File::options();
     let options = if args.force {
         binding.write(true).truncate(true).create(true)
@@ -93,7 +106,6 @@ fn main() -> Result<()> {
             Err(e).with_context(|| format!("Failed to create file: {}", path))
         }
     })?;
-
     write!(&file, "{}", license).with_context(|| format!("Failed to write file: {}", path))?;
     println!("Generated {:?} in {}", license, path);
     Ok(())
