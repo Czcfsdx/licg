@@ -11,7 +11,8 @@ mod license;
 #[command(version, about, long_about = None)]
 /// A simple open source license generator
 struct Cli {
-    /// License to generate
+    /// License to generate, required unless provide --list flag
+    #[arg(required_unless_present("list"))]
     license: Option<String>,
 
     /// Name of the copyright holder in license
@@ -44,15 +45,9 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    // parse the license kind
-    let input = args.license.unwrap_or_else(|| {
-        let mut cmd = Cli::command();
-        cmd.error(
-            clap::error::ErrorKind::MissingRequiredArgument,
-            "LICENSE is required without --list, but not provided",
-        )
-        .exit()
-    });
+    // Cli::parse() will signal error and exit when args.license is not provide,
+    // So we can safely unwrap it.
+    let input = args.license.unwrap();
     let kind = license::LicenseKind::from_input(&input).unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
