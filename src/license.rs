@@ -1,6 +1,7 @@
+use licg_macros::FromInputUpperFn;
 use std::fmt;
 
-#[derive(Debug)]
+#[derive(Debug, FromInputUpperFn)]
 pub enum LicenseKind {
     BSD2,    // BSD 2-Clause "Simplified" License
     BSD3,    // BSD 3-Clause “New” or “Revised” License
@@ -8,20 +9,6 @@ pub enum LicenseKind {
     Apache2, // Apache License 2.0
     GPL2,    // GNU General Public License v2.0
     GPL3,    // GNU General Public License v3.0
-}
-
-impl LicenseKind {
-    pub fn from_input(input: &str) -> Option<Self> {
-        match input.to_uppercase().as_str() {
-            "MIT" => Some(LicenseKind::MIT),
-            "BSD2" => Some(LicenseKind::BSD2),
-            "BSD3" => Some(LicenseKind::BSD3),
-            "APACHE2" => Some(LicenseKind::Apache2),
-            "GPL2" => Some(LicenseKind::GPL2),
-            "GPL3" => Some(LicenseKind::GPL3),
-            _ => None,
-        }
-    }
 }
 
 pub fn list_license_kind() {

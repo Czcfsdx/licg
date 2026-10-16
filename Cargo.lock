@@ -134,8 +134,13 @@ version = "1.1.1"
 dependencies = [
  "anyhow",
  "clap",
+ "licg_macros",
  "time",
 ]
+
+[[package]]
+name = "licg_macros"
+version = "0.1.0"
 
 [[package]]
 name = "num-conv"

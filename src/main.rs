@@ -33,7 +33,7 @@ struct Cli {
 
     /// Do not perform any operations that modify the filesystem and only show the debug output
     #[arg(long)]
-    dry_run: bool
+    dry_run: bool,
 }
 
 fn main() -> Result<()> {
@@ -71,7 +71,9 @@ fn main() -> Result<()> {
     });
     let holder = name.trim();
 
-    let year = OffsetDateTime::now_local().context("Fail to get current year")?.year();
+    let year = OffsetDateTime::now_local()
+        .context("Fail to get current year")?
+        .year();
     let license = license::License { kind, holder, year };
 
     let path = args.path;
