@@ -1,24 +1,21 @@
-use licg_macros::FromInputUpperFn;
+use licg_macros::{FromInputUpperFn, ListVariantsWithDocFn};
 use std::fmt;
 
-#[derive(Debug, FromInputUpperFn)]
+#[derive(Debug, FromInputUpperFn, ListVariantsWithDocFn)]
+/// Supported Licenses
 pub enum LicenseKind {
-    BSD2,    // BSD 2-Clause "Simplified" License
-    BSD3,    // BSD 3-Clause “New” or “Revised” License
-    MIT,     // MIT License
-    Apache2, // Apache License 2.0
-    GPL2,    // GNU General Public License v2.0
-    GPL3,    // GNU General Public License v3.0
-}
-
-pub fn list_license_kind() {
-    println!("Supported Licenses:");
-    println!(r#"    Apache2: Apache License 2.0"#);
-    println!(r#"    BSD2: BSD 2-Clause "Simplified" License"#);
-    println!(r#"    BSD3: BSD 3-Clause “New” or “Revised” License"#);
-    println!(r#"    GPL2: GNU General Public License v2.0"#);
-    println!(r#"    GPL3: GNU General Public License v3.0"#);
-    println!(r#"    MIT: MIT License"#);
+    /// Apache License 2.0
+    Apache2,
+    /// BSD 2-Clause "Simplified" License
+    BSD2,
+    /// BSD 3-Clause “New” or “Revised” License
+    BSD3,
+    /// GNU General Public License v2.0
+    GPL2,
+    /// GNU General Public License v3.0
+    GPL3,
+    /// MIT License
+    MIT,
 }
 
 #[derive(Debug)]

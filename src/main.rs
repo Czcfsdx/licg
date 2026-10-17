@@ -41,7 +41,7 @@ fn main() -> Result<()> {
 
     // if --list is provided, do not generate any license file
     if args.list {
-        license::list_license_kind();
+        license::LicenseKind::list();
         return Ok(());
     }
 
