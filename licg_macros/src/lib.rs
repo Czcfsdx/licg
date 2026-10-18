@@ -108,19 +108,23 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
 
     // collect enum variants
     let mut body_tokens = body.stream().into_iter();
-    let mut variants_with_doc = Vec::new();
-    let mut docs_variants = Vec::new();
+    struct VariantWithDoc {
+        name: String,
+        doc: String,
+    }
+    let mut variants_with_doc: Vec<VariantWithDoc> = Vec::new();
+    let mut docs_variant = Vec::new();
     let mut max_variant_name_len = 0; // for align
     loop {
         match body_tokens.next() {
             Some(TokenTree::Ident(ident)) => {
-                let doc = docs_variants.join(" ");
-                docs_variants.clear();
-                let variant_name = ident.to_string();
-                if variant_name.len() > max_variant_name_len {
-                    max_variant_name_len = variant_name.len();
+                let name = ident.to_string();
+                if name.len() > max_variant_name_len {
+                    max_variant_name_len = name.len();
                 }
-                variants_with_doc.push((variant_name, doc));
+                let doc = docs_variant.join(" ");
+                docs_variant.clear();
+                variants_with_doc.push(VariantWithDoc { name, doc });
             }
             Some(TokenTree::Group(group)) if group.delimiter() == Delimiter::Bracket => {
                 let mut body_tokens = group.stream().into_iter();
@@ -131,7 +135,7 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
                     && let Some(TokenTree::Literal(literal)) = body_tokens.next()
                 {
                     let str = literal.to_string().trim_matches('"').trim().to_string();
-                    docs_variants.push(str);
+                    docs_variant.push(str);
                 }
             }
             Some(_) => continue,
@@ -147,10 +151,10 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
 
     let print_variants_with_doc: String = variants_with_doc
         .iter()
-        .map(|(v, doc)| {
-            let variant_name_len = v.len();
+        .map(|VariantWithDoc{ name, doc }| {
+            let variant_name_len = name.len();
             let padding = " ".repeat(max_variant_name_len - variant_name_len);
-            format!("println!(\"    {v}: {padding}{doc}\");\n")
+            format!("println!(\"    {name}: {padding}{doc}\");\n")
         })
         .collect();
     let enum_docs = enum_docs.join(" ");
