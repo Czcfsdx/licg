@@ -1,7 +1,7 @@
 use proc_macro::{Delimiter, TokenStream, TokenTree};
 
 #[proc_macro_derive(FromInputUpperFn)]
-pub fn from_input_upper(input: TokenStream) -> TokenStream {
+pub fn derive_from_input_upper_fn(input: TokenStream) -> TokenStream {
     let mut tokens = input.into_iter();
 
     // enum keyword
@@ -66,7 +66,7 @@ impl {name} {{
 }
 
 #[proc_macro_derive(ListVariantsWithDocFn)]
-pub fn list_variants_with_doc(input: TokenStream) -> TokenStream {
+pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
     let mut tokens = input.into_iter();
 
     // enum keyword and collect the doc
