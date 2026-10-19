@@ -38,19 +38,19 @@ $ licg mit -f
 ## Supported Licenses
 
 Supported Licenses:
-    Apache2:   Apache License 2.0
-    AGPL3:     GNU Affero General Public License v3.0
-    BSD2:      BSD 2-Clause "Simplified" License
-    BSD3:      BSD 3-Clause “New” or “Revised” License
-    BSL:       Boost Software License 1.0
-    EPL2:      Eclipse Public License 2.0
-    GPL2:      GNU General Public License v2.0
-    GPL3:      GNU General Public License v3.0
-    LGPL2:     GNU Lesser General Public License v2.1
-    LGPL3:     GNU Lesser General Public License v3.0
-    MIT:       MIT License
-    MPL2:      Mozilla Public License 2.0
-    Unlicense: The Unlicense
+- Apache2:   Apache License 2.0
+- AGPL3:     GNU Affero General Public License v3.0
+- BSD2:      BSD 2-Clause "Simplified" License
+- BSD3:      BSD 3-Clause “New” or “Revised” License
+- BSL:       Boost Software License 1.0
+- EPL2:      Eclipse Public License 2.0
+- GPL2:      GNU General Public License v2.0
+- GPL3:      GNU General Public License v3.0
+- LGPL2:     GNU Lesser General Public License v2.1
+- LGPL3:     GNU Lesser General Public License v3.0
+- MIT:       MIT License
+- MPL2:      Mozilla Public License 2.0
+- Unlicense: The Unlicense
 
 You can also use `-l`/`--list` flag to see the supported licenses.
 
