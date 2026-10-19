@@ -10,14 +10,14 @@ pub fn derive_from_input_upper_fn(input: TokenStream) -> TokenStream {
         match tokens.next() {
             Some(TokenTree::Ident(ident)) if ident.to_string() == "enum" => break,
             Some(_) => continue,
-            None => return "compile_error! expected enum".parse().unwrap(),
+            None => panic!("compile_error! expected enum"),
         }
     }
 
     // enum name
     let name = match tokens.next() {
         Some(TokenTree::Ident(ident)) => ident.to_string(),
-        _ => return "compile_error! expected enum name".parse().unwrap(),
+        _ => panic!("compile_error! expected enum name"),
     };
 
     // enum body
@@ -25,7 +25,7 @@ pub fn derive_from_input_upper_fn(input: TokenStream) -> TokenStream {
         match tokens.next() {
             Some(TokenTree::Group(group)) if group.delimiter() == Delimiter::Brace => break group,
             Some(_) => continue,
-            None => return "compile_error! expected enum body".parse().unwrap(),
+            None => panic!("compile_error! expected enum body"),
         }
     };
 
@@ -37,9 +37,7 @@ pub fn derive_from_input_upper_fn(input: TokenStream) -> TokenStream {
         }
     }
     if variants.is_empty() {
-        return "compile_error! expect variants in enum body"
-            .parse()
-            .unwrap();
+        panic!("compile_error! expect variants in enum body");
     }
 
     let matches: String = variants
@@ -88,14 +86,14 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
                 }
             }
             Some(_) => continue,
-            None => return "compile_error! expected enum".parse().unwrap(),
+            None => panic!("compile_error! expected enum"),
         }
     }
 
     // enum name
     let name = match tokens.next() {
         Some(TokenTree::Ident(ident)) => ident.to_string(),
-        _ => return "compile_error! expected enum name".parse().unwrap(),
+        _ => panic!("compile_error! expected enum name"),
     };
 
     // enum body
@@ -103,7 +101,7 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
         match tokens.next() {
             Some(TokenTree::Group(group)) if group.delimiter() == Delimiter::Brace => break group,
             Some(_) => continue,
-            None => return "compile_error! expected enum body".parse().unwrap(),
+            None => panic!("compile_error! expected enum body"),
         }
     };
 
@@ -145,9 +143,7 @@ pub fn derive_list_variants_with_doc_fn(input: TokenStream) -> TokenStream {
     }
 
     if variants_with_doc.is_empty() {
-        return "compile_error! expect variants in enum body"
-            .parse()
-            .unwrap();
+        panic!("compile_error! expect variants in enum body");
     }
 
     let print_variants_with_doc: String = variants_with_doc
@@ -182,14 +178,14 @@ pub fn derive_fmt_license_fn(input: TokenStream) -> TokenStream {
         match tokens.next() {
             Some(TokenTree::Ident(ident)) if ident.to_string() == "enum" => break,
             Some(_) => continue,
-            None => return "compile_error! expected enum".parse().unwrap(),
+            None => panic!("compile_error! expected enum"),
         }
     }
 
     // enum name
     let name = match tokens.next() {
         Some(TokenTree::Ident(ident)) => ident.to_string(),
-        _ => return "compile_error! expected enum name".parse().unwrap(),
+        _ => panic!("compile_error! expected enum name"),
     };
 
     // enum body
@@ -197,7 +193,7 @@ pub fn derive_fmt_license_fn(input: TokenStream) -> TokenStream {
         match tokens.next() {
             Some(TokenTree::Group(group)) if group.delimiter() == Delimiter::Brace => break group,
             Some(_) => continue,
-            None => return "compile_error! expected enum body".parse().unwrap(),
+            None => panic!("compile_error! expected enum body"),
         }
     };
 
@@ -217,16 +213,12 @@ pub fn derive_fmt_license_fn(input: TokenStream) -> TokenStream {
                     if let Ok(template) = fs::read_to_string(&template_path) {
                         variants_with_template.push(VariantWithTemplate { name, template });
                     } else {
-                        return format!(
-                            "compile_error! fail to read template form {template_path}"
-                        )
-                        .parse()
-                        .unwrap();
+                        panic!(
+                            "compile_error! fail to read template of variant {name} from {template_path}"
+                        );
                     }
                 } else {
-                    return format!("compile_error! expect template attribute in variant {name}")
-                        .parse()
-                        .unwrap();
+                    panic!("compile_error! expect template attribute in variant {name}");
                 }
                 variant_template = None;
             }
@@ -248,9 +240,7 @@ pub fn derive_fmt_license_fn(input: TokenStream) -> TokenStream {
     }
 
     if variants_with_template.is_empty() {
-        return "compile_error! expect variants in enum body"
-            .parse()
-            .unwrap();
+        panic!("compile_error! expect variants in enum body");
     }
 
     let fmt_variants_with_template: String = variants_with_template
