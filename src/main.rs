@@ -45,9 +45,7 @@ fn main() -> Result<()> {
         return Ok(());
     }
 
-    // Cli::parse() will signal error and exit when args.license is not provide,
-    // So we can safely unwrap it.
-    let input = args.license.unwrap();
+    let input = args.license.unwrap_or_default();
     let kind = license::LicenseKind::from_input(&input).unwrap_or_else(|| {
         let mut cmd = Cli::command();
         cmd.error(
@@ -97,7 +95,7 @@ fn main() -> Result<()> {
         if e.kind() == std::io::ErrorKind::AlreadyExists {
             // This will only happen if we set create_new to true in options
             // in which case the args.force should be false
-            assert_eq!(args.force, false);
+            assert!(!args.force);
             Err(e).with_context(|| format!("Failed to create file which is already exists: {}\n       Use the flag -f/--force if you want to overwrite this file", path))
         } else {
             Err(e).with_context(|| format!("Failed to create file: {}", path))
